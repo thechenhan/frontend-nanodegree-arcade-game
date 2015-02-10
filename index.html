@@ -3,10 +3,46 @@
 <head>
     <title>Effective JavaScript: Frogger</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 </head>
 <body>
+	<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+<!-- Button trigger modal -->
+<div class="buttongroups">
+<button id="how-to-play" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  How to play
+</button>
+
+<button id="start-game" type="button" class="btn btn-primary btn-lg" > Start Game </button>
+
+</div>
+<button id="continue-game" type="button" class="btn btn-primary btn-lg" > OK </button>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">How to Play</h4>
+      </div>
+      <div class="modal-body">
+        There is a gem in the revier. </br> Go to pick it up! </br>
+        Be careful, don't fall into the water! </br>
+        Don't hit the bug! </br>
+        After you collect the gem, the amount and speed of the bug will increase!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 </body>
 </html>
