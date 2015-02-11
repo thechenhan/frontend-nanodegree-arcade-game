@@ -13,8 +13,8 @@
  * the canvas' context (ctx) object globally available to make writing app.js
  * a little simpler to work with.
  */
-//define the entire map size, the rows and the cols
-var pause = false; //if pause, the game is pause;
+//define the pause flag to check it the games should be paused
+var pause = false; 
 
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
@@ -27,13 +27,14 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
+    //append the canvas    
     canvas.width = 505;
     canvas.height = 600;
     doc.body.appendChild(canvas);
+    
+    //the copyright information
     ctx.font="13px Georgia";
     ctx.fillText("Game is Devloped by: Han Chen from McGill University, 2015.Feb",0 ,40);
-
-
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -51,8 +52,9 @@ var Engine = (function(global) {
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
-       
-        if (!pause){
+        
+        //Only when the game is not paused, the game will continue to update and render
+        if (!pause) {
             update(dt);
             render();
         }
@@ -65,7 +67,7 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        
+      
         win.requestAnimationFrame(main);
         
     };
@@ -75,7 +77,6 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-       
         lastTime = Date.now();
         main();
     }
@@ -90,31 +91,36 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
+        //update the positions of the enemies and the player
         updateEntities(dt);
+        //check if play should die
         checkCollisions();
-        player.checkCollection();
+        //check if player will win
+        player.checkWin();
     }
 
+    /**
+     * check if there is a collision between the player and the bug.
+     */
     function checkCollisions() {
     //Convert the enemy position from pixel to coordinate (col, row); And compare;
-    //this area.
         var enemyPositionCol, enemyPositionRow;
-        for( var i = 0; i < hardLevel; i++ ) {
-            enemyPositionCol = Math.round( allEnemies[i].x / 101);
-            enemyPositionRow = Math.round( allEnemies[i].y / 83);
+        for (var i = 0; i < hardLevel; i++) {
+            enemyPositionCol = Math.round(allEnemies[i].x / 101);
+            enemyPositionRow = Math.round(allEnemies[i].y / 83);
             if ( ((player.x / 101) === enemyPositionCol) && 
                 ((player.y / 83) === enemyPositionRow) ){
+            //if there is a coolision between bug and enemy
             $("#message").text("Well, the bug catched you.");
             player.die();
             }
-         }
-        if ((player.y === 0) && (player.x !== gemPositionX)) {
+        }
+        if (player.y === 0 && player.x !== gemPositionX) {
+            //if the player fall into the river,die
             $("#message").text("You are falling into the river, die!");
             player.die()
         }
     }
-
-    
    
     /* This is called by the update function  and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
@@ -231,43 +237,46 @@ var Engine = (function(global) {
     global.ctx = ctx;
 })(this);
 
-$(document).ready(function(){
+//this block controls the display of the bottons and divs
+$(document).ready(function() {
+    //by fault, the continue-game button should not can be seen. 
     $("#continue-game").hide();
-    $("#start-game").click(function(){
-     console.log("re-start");
-     started = true;
-     gamereset();
-     $("#start-game").hide();
-     $("#how-to-play").hide();
-     $("#message").text("Go to Pickup the Gem!");
 
+    //click the start game to start a new game
+    $("#start-game").click(function() {
+        gamereset();
+        $("#start-game").hide();
+        $("#how-to-play").hide();
+        $("#message").text("Go to Pickup the Gem!");
     });
 
-    $("#continue-game").click(function(){
-     $("#continue-game").hide();
-     $("#message").text("Come on for the gem!");
-     console.log("continue game");
-     player.reset();
-     pause = false;
-     hardLevel = 3;
-    allEnemies = [];
-    for( var i = 0; i < hardLevel; i++ ) {
-        allEnemies.push(new Enemy());
-    }
-
+    //after the player lose one life, the player should click continue-game
+    //to continue the game
+    $("#continue-game").click(function() {
+        $("#continue-game").hide();
+        $("#message").text("Come on for the gem!");
+        player.reset();
+        pause = false;
+        hardLevel = 3;
+        allEnemies = [];
+        for (var i = 0; i < hardLevel; i++) {
+            allEnemies.push(new Enemy());
+        }
     });
 });
 
+/**
+ * When the player loses all of the five lives
+ * the game should be reset as following.
+ */
 function gamereset() {
     hardLevel = 3;
     allEnemies = [];
-    for( var i = 0; i < hardLevel; i++ ) {
+    for (var i = 0; i < hardLevel; i++) {
         allEnemies.push(new Enemy());
     }
     pause = false;
     player.score = 0;
     player.life = initialLife;
     player.reset();
-    ctx.clearRect(0, 0, 505, 600);
 }
-
