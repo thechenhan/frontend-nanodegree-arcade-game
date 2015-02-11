@@ -1,6 +1,7 @@
 var coordinateX = [0, 101, 202, 303, 404, 505, 606, 707, 808];
 var coordinateY = [0, 83, 83*2, 83*3, 83*4, 83*5, 83*6, 83*7, 83*8, 83*9];
-var hardLevel = 3;
+var hardLevel = 0;
+var initialLife = 5;
 var mapSizeX = 4;
 var mapSizeY = 5;
 var gemPositionX = coordinateX[Math.floor(Math.random() * 5)], 
@@ -44,7 +45,7 @@ var Player = function (x, y) {
     this.x = coordinateX[x];
     this.y = coordinateY[y];
     this.sprite = 'images/char-boy.png';
-    this.life = 5;  //the intial life
+    this.life = initialLife;  //the intial life
     this.score = 0;
 }
 
@@ -69,7 +70,12 @@ Player.prototype.render = function() {
     ctx.fillStyle = 'black';
     ctx.fillText("Socre: " + this.score, 350, 580);
     if (this.life <= 0) {
-    ctx.drawImage(Resources.get('images/gameover.png'), 0, 45, 505, 545);
+    //ctx.drawImage(Resources.get('images/gameover.png'), 0, 48, 505, 538);
+    $("#message").text("Game over, you got a score of " + this.score + " !");
+    $("#message").color = "red";
+    $("#start-game").show();
+    $("#how-to-play").show();
+    $("#continue-game").hide();
     }
 };
 
@@ -83,6 +89,7 @@ Player.prototype.reset = function() {
 Player.prototype.die = function() {
     this.life = this.life - 1;
     pause = true;
+    $("#continue-game").show();
     //this.reset();  
 
 };
@@ -91,6 +98,7 @@ Player.prototype.checkCollection = function() {
     if ( (this.x === gemPositionX) && (this.y === 0) ){
         this.score =  this.score + hardLevel - 2;
         this.reset();
+         $("#message").text("Good! Score increases to " + this.score +" !");
         hardLevel = hardLevel + 1;
         allEnemies.push(new Enemy());
     }

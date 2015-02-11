@@ -30,6 +30,10 @@ var Engine = (function(global) {
     canvas.width = 505;
     canvas.height = 600;
     doc.body.appendChild(canvas);
+    ctx.font="13px Georgia";
+    ctx.fillText("Game is Devloped by: Han Chen from McGill University, 2015.Feb",0 ,40);
+
+
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -100,10 +104,12 @@ var Engine = (function(global) {
             enemyPositionRow = Math.round( allEnemies[i].y / 83);
             if ( ((player.x / 101) === enemyPositionCol) && 
                 ((player.y / 83) === enemyPositionRow) ){
+            $("#message").text("Well, the bug catched you.");
             player.die();
             }
          }
         if ((player.y === 0) && (player.x !== gemPositionX)) {
+            $("#message").text("You are falling into the river, die!");
             player.die()
         }
     }
@@ -226,16 +232,24 @@ var Engine = (function(global) {
 })(this);
 
 $(document).ready(function(){
+    $("#continue-game").hide();
     $("#start-game").click(function(){
      console.log("re-start");
+     started = true;
      gamereset();
+     $("#start-game").hide();
+     $("#how-to-play").hide();
+     $("#message").text("Go to Pickup the Gem!");
+
     });
 
     $("#continue-game").click(function(){
+     $("#continue-game").hide();
+     $("#message").text("Come on for the gem!");
      console.log("continue game");
      player.reset();
      pause = false;
-      hardLevel = 3;
+     hardLevel = 3;
     allEnemies = [];
     for( var i = 0; i < hardLevel; i++ ) {
         allEnemies.push(new Enemy());
@@ -252,7 +266,7 @@ function gamereset() {
     }
     pause = false;
     player.score = 0;
-    player.life = 5;
+    player.life = initialLife;
     player.reset();
     ctx.clearRect(0, 0, 505, 600);
 }
